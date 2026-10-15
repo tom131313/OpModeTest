@@ -12,6 +12,9 @@ import org.wpilib.command3.Scheduler;
 import org.wpilib.command3.Trigger;
 import org.wpilib.framework.OpModeRobot;
 import org.wpilib.hardware.discrete.DigitalInput;
+import org.wpilib.hardware.hal.RobotMode;
+
+import first.robot.opmode.MyProgrammedOpMode;
 
 /**
  * The methods in this class are called automatically as described in the OpModeRobot documentation.
@@ -38,6 +41,11 @@ public class Robot extends OpModeRobot {
    */
   public Robot() {
     System.out.println("Robot constructor");
+    addOpMode(RobotMode.TELEOPERATED, "Example Programmed OpMode", "Group 1", () -> new MyProgrammedOpMode(this));
+    publishOpModes();
+    // output from MyProgrammedOpMode
+    // Example of programmed OpMode has been constructed for mode Example Programmed OpMode, TELEOPERATED
+
     testMechanism.setDefaultCommand(testMechanism.run(coroutine->System.out.println("Global Default Test Mechanism")).named("Test Mechanism"));
     new Trigger(di0).whileTrue(Command.noRequirements(coroutine -> {while(true) {System.out.println("Robot");coroutine.yield();}}).named("Robot"));
   }
