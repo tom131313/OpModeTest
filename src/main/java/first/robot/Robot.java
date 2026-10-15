@@ -34,6 +34,7 @@ public class Robot extends OpModeRobot {
   public DigitalInput di = new DigitalInput(0);
   public BooleanSupplier di0 = () -> di.get();
   public Mechanism testMechanism = new Mechanism() {};
+  public Trigger testTrigger; // public and named to test unbind() elsewhere
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -47,7 +48,7 @@ public class Robot extends OpModeRobot {
     // Example of programmed OpMode has been constructed for mode Example Programmed OpMode, TELEOPERATED
 
     testMechanism.setDefaultCommand(testMechanism.run(coroutine->System.out.println("Global Default Test Mechanism")).named("Test Mechanism"));
-    new Trigger(di0).whileTrue(Command.noRequirements(coroutine -> {while(true) {System.out.println("Robot");coroutine.yield();}}).named("Robot"));
+    testTrigger = new Trigger(di0).whileTrue(Command.noRequirements(coroutine -> {while(true) {System.out.println("Robot");coroutine.yield();}}).named("Robot"));
   }
 
   /** This function is called exactly once when the DS first connects. */

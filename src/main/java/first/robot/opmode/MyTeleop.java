@@ -32,6 +32,7 @@ public class MyTeleop implements OpMode {
     this.robot = robot;
     robot.testMechanism.setDefaultCommand(robot.testMechanism.run(coroutine->System.out.println("Teleop Mode Default Test Mechanism")).named("Test Mechanism"));
     new Trigger(robot.di0).whileTrue(Command.noRequirements(coroutine -> {while(true) {System.out.println("MyTeleop");coroutine.yield();}}).named("MyTeleop"));
+    // now the Robot and OpMode triggers are active
   }
 
  /**
@@ -63,7 +64,13 @@ public class MyTeleop implements OpMode {
                     }
                 ).named("MyTeleopTriggeredCommand");
 
+            // robot.testTrigger.unbind(); // comment/uncomment to test wiping out the global trigger bindings. It works and robot bindings have to be rerun to reactivate.
+            // Trigger bindings in OpMode and Command scope are automatically unbound if out of scope and may be garbage collected.
+            // Those Triggers for OpMode and Command scope must be created from scratch each time the scope is entered as they may have been garbage collected
+            // unless referenced elsewhere.
+
             new Trigger(robot.di0).whileTrue(myTeleopTriggeredCommand);
+            // now the Robot, OpMode, and Command triggers are active
 
             coroutine.wait(Seconds.of(15.));
         }
