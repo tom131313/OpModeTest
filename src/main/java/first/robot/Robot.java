@@ -10,9 +10,14 @@ import org.wpilib.command3.Command;
 import org.wpilib.command3.Mechanism;
 import org.wpilib.command3.Scheduler;
 import org.wpilib.command3.Trigger;
+import org.wpilib.driverstation.DriverStationDisplay;
 import org.wpilib.framework.OpModeRobot;
 import org.wpilib.hardware.discrete.DigitalInput;
 import org.wpilib.hardware.hal.RobotMode;
+import org.wpilib.networktables.BooleanPublisher;
+import org.wpilib.networktables.BooleanSubscriber;
+import org.wpilib.networktables.BooleanTopic;
+import org.wpilib.networktables.NetworkTableInstance;
 
 import first.robot.opmode.MyProgrammedOpMode;
 
@@ -36,6 +41,12 @@ public class Robot extends OpModeRobot {
   public Mechanism testMechanism = new Mechanism() {};
   public Trigger testTrigger; // public and named to test unbind() elsewhere
 
+  private final BooleanTopic topic =
+      NetworkTableInstance.getDefault().getTable("Settings").getBooleanTopic("Use Vision");
+  private final BooleanPublisher pub = topic.publish(); // if setting a default
+  private final BooleanSubscriber sub = topic.subscribe(false);
+
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -49,6 +60,10 @@ public class Robot extends OpModeRobot {
 
     testMechanism.setDefaultCommand(testMechanism.run(coroutine->System.out.println("Global Default Test Mechanism")).named("Test Mechanism"));
     testTrigger = new Trigger(di0).whileTrue(Command.noRequirements(coroutine -> {while(true) {System.out.println("Robot");coroutine.yield();}}).named("Robot"));
+
+    pub.setDefault(false);
+    // topic.setRetained(true); // keep the value across restarts of the robot code
+
   }
 
   /** This function is called exactly once when the DS first connects. */
@@ -63,7 +78,10 @@ public class Robot extends OpModeRobot {
     if (countRobotPeriodic++ % 100 == 0) {
       System.out.println("__________Robot robotPeriodic " + countRobotPeriodic);
       System.out.println("dio 0 " + di0.getAsBoolean());
-  }}
+      DriverStationDisplay.addKeyedLine("vision selection", "Use vision is " + (sub.get() ? "ON" : "OFF"));
+      DriverStationDisplay.updateLines();
+    }
+}
 
   /** Function called once during robot initialization in simulation. */
   @Override
