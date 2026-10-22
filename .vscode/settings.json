@@ -58,5 +58,21 @@
     "org.wpilib.math.**.struct.*",
   ],
   "java.debug.settings.enableRunDebugCodeLens": false,
-  "java.dependency.enableDependencyCheckup": false
+  "java.dependency.enableDependencyCheckup": false,
+  "editor.rulers": [
+    100
+  ],
+  "workbench.colorCustomizations": {
+    // The currently active/selected match (the one you are focused on)
+    "editor.findMatchBackground": "#000000", 
+    "editor.findMatchBorder": "#FFFFFF",
+
+    // All other matches found throughout the open file
+    "editor.findMatchHighlightBackground": "#00FF0066", // Hex with transparency
+    "editor.findMatchHighlightBorder": "#00FF00",
+
+    // Matches found globally using the sidebar Search panel (Ctrl+Shift+F)
+    "search.resultsInfoText": "#FFFFFF",
+    "peekViewEditor.matchHighlightBackground": "#FF00FF"
+}
 }
